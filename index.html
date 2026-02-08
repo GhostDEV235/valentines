@@ -54,6 +54,22 @@
 
         h1 { margin-bottom: 1rem; font-size: 1.6rem; opacity: 0.8; }
         p { font-size: 1.3rem; line-height: 1.6; font-weight: 500; }
+
+        .btn {
+            margin-top: 1.5rem;
+            padding: 0.7rem 1.4rem;
+            border: none;
+            border-radius: 999px;
+            background: #ffffff;
+            color: var(--text-color);
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+        }
+
+        .btn:hover { transform: translateY(-1px); box-shadow: 0 12px 24px rgba(0,0,0,0.12); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
         
         .main-heart {
             font-size: 2.5rem;
@@ -79,24 +95,95 @@
     <div class="card">
         <h1>Every Day, You 🤍</h1>
         <p id="message">Finding the right words...</p>
+        <button id="newQuoteBtn" class="btn" type="button">Show Today’s Quote</button>
         <div class="main-heart">❤️</div>
     </div>
 
     <script>
         const messages = {
-            "02-08": "Loving you isn’t something I schedule — it’s something I live, every single day.",
-            "02-09": "Some people wait for a special date. I choose you on ordinary days too.",
-            "02-10": "You make the quiet days warmer and the loud days softer.",
-            "02-11": "My favorite routine is knowing you’re there.",
-            "02-12": "Love isn’t a moment. It’s the way you stay.",
-            "02-13": "Tomorrow is famous for love — but you’ve had my heart long before it.",
-            "02-14": "Happy Valentine’s Day. Today I celebrate you out loud, like I do quietly every day."
+            "02-08": [
+                "Loving you isn’t something I schedule — it’s something I live, every single day.",
+                "If today is ordinary, then let my love make it extraordinary."
+            ],
+            "02-09": [
+                "Some people wait for a special date. I choose you on ordinary days too.",
+                "My favorite part of today is that it includes you."
+            ],
+            "02-10": [
+                "You make the quiet days warmer and the loud days softer.",
+                "Even the simplest moments feel sweet with you in them."
+            ],
+            "02-11": [
+                "My favorite routine is knowing you’re there.",
+                "If love had a habit, it would look like us."
+            ],
+            "02-12": [
+                "Love isn’t a moment. It’s the way you stay.",
+                "I love you in the tiny seconds that make up a day."
+            ],
+            "02-13": [
+                "Tomorrow is famous for love — but you’ve had my heart long before it.",
+                "We do not need a holiday to be my favorite."
+            ],
+            "02-14": [
+                "Happy Valentine’s Day. Today I celebrate you out loud, like I do quietly every day.",
+                "Today is full of hearts, but mine has always been yours."
+            ]
         };
 
-        // Set the message
+        const btn = document.getElementById("newQuoteBtn");
+        const messageEl = document.getElementById("message");
         const today = new Date();
         const key = today.toLocaleDateString("en-US", { month: "2-digit", day: "2-digit" }).replace("/", "-");
-        document.getElementById("message").textContent = messages[key] || "No matter the date — you are loved.";
+        const todayMessages = messages[key];
+
+        const storageKey = "quotesViewedByDay";
+        const limitPerDay = 2;
+
+        function getTodayCount() {
+            const raw = localStorage.getItem(storageKey);
+            const data = raw ? JSON.parse(raw) : {};
+            const count = Number(data[key] || 0);
+            return { data, count };
+        }
+
+        function setTodayCount(data, count) {
+            data[key] = count;
+            localStorage.setItem(storageKey, JSON.stringify(data));
+        }
+
+        function refreshButtonState() {
+            const { count } = getTodayCount();
+            if (!todayMessages) {
+                btn.disabled = true;
+                btn.textContent = "Quotes run 02/08–02/14/2026";
+                return;
+            }
+            if (count >= limitPerDay) {
+                btn.disabled = true;
+                btn.textContent = "Come back tomorrow";
+            } else {
+                btn.disabled = false;
+                btn.textContent = count === 0 ? "Show Today’s Quote" : "Show Another Quote";
+            }
+        }
+
+        if (todayMessages) {
+            messageEl.textContent = "Tap the button to reveal today’s quote.";
+        } else {
+            messageEl.textContent = "Quotes are available from 02/08 to 02/14/2026.";
+        }
+
+        btn.addEventListener("click", () => {
+            const { data, count } = getTodayCount();
+            if (!todayMessages || count >= limitPerDay) return;
+            const nextMessage = todayMessages[Math.min(count, todayMessages.length - 1)];
+            messageEl.textContent = nextMessage;
+            setTodayCount(data, count + 1);
+            refreshButtonState();
+        });
+
+        refreshButtonState();
 
         // Create background floating hearts
         function createHeart() {
