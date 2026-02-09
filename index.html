@@ -78,6 +78,80 @@
             animation: pulse 1.5s infinite;
         }
 
+        /* Fireworks (shown on 02/14) */
+        .fireworks {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .fireworks.show { opacity: 1; }
+
+        .spark {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #ffffff;
+            animation: burst 1.6s ease-out infinite;
+            box-shadow:
+                0 0 12px rgba(255, 255, 255, 0.9),
+                0 0 24px rgba(255, 200, 220, 0.9),
+                0 0 36px rgba(255, 160, 200, 0.9);
+        }
+
+        .spark:nth-child(1) { top: 15%; left: 20%; animation-delay: 0s; }
+        .spark:nth-child(2) { top: 25%; left: 70%; animation-delay: 0.3s; }
+        .spark:nth-child(3) { top: 55%; left: 35%; animation-delay: 0.6s; }
+        .spark:nth-child(4) { top: 65%; left: 75%; animation-delay: 0.9s; }
+        .spark:nth-child(5) { top: 40%; left: 50%; animation-delay: 1.2s; }
+
+        @keyframes burst {
+            0% { transform: scale(0.2); opacity: 0; }
+            20% { opacity: 1; }
+            70% { transform: scale(1.6); opacity: 0.6; }
+            100% { transform: scale(2.2); opacity: 0; }
+        }
+
+        .all-quotes {
+            margin-top: 1.5rem;
+            padding: 1rem 1.2rem;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            text-align: left;
+            max-height: 220px;
+            overflow: auto;
+        }
+
+        .all-quotes h2 {
+            margin: 0 0 0.6rem 0;
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .all-quotes ul {
+            margin: 0;
+            padding-left: 1.2rem;
+        }
+
+        .all-quotes li {
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .all-quotes li strong {
+            display: block;
+            margin-bottom: 0.1rem;
+            font-size: 0.9rem;
+            letter-spacing: 0.02em;
+        }
+
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.2); }
@@ -93,10 +167,21 @@
 <body>
 
     <div class="card">
-        <h1>Every Day, You 🤍</h1>
+        <h1>Every Day, You — Habiba 🤍</h1>
         <p id="message">Finding the right words...</p>
         <button id="newQuoteBtn" class="btn" type="button">Show Today’s Quote</button>
         <div class="main-heart">❤️</div>
+        <div class="all-quotes">
+            <h2>All Daily Quotes (02/08–02/14/2026)</h2>
+            <ul id="allQuotesList"></ul>
+        </div>
+    </div>
+    <div id="fireworks" class="fireworks" aria-hidden="true">
+        <span class="spark"></span>
+        <span class="spark"></span>
+        <span class="spark"></span>
+        <span class="spark"></span>
+        <span class="spark"></span>
     </div>
 
     <script>
@@ -126,8 +211,8 @@
                 "We do not need a holiday to be my favorite."
             ],
             "02-14": [
-                "Happy Valentine’s Day. Today I celebrate you out loud, like I do quietly every day.",
-                "Today is full of hearts, but mine has always been yours."
+                "Happy Valentine’s Day, Habiba — our 1-year anniversary. One year of us, and my heart is even more yours.",
+                "A year ago you became my favorite place to be. Today, I love you deeper, softer, and forever."
             ]
         };
 
@@ -169,7 +254,7 @@
         }
 
         if (todayMessages) {
-            messageEl.textContent = "Tap the button to reveal today’s quote.";
+            messageEl.textContent = "Tap the button to reveal today’s quote, Habiba.";
         } else {
             messageEl.textContent = "Quotes are available from 02/08 to 02/14/2026.";
         }
@@ -184,6 +269,29 @@
         });
 
         refreshButtonState();
+
+        // Fireworks for 02/14
+        const fireworks = document.getElementById("fireworks");
+        if (key === "02-14") {
+            fireworks.classList.add("show");
+        }
+
+        // Render full list of daily quotes
+        const allQuotesList = document.getElementById("allQuotesList");
+        const dateOrder = ["02-08", "02-09", "02-10", "02-11", "02-12", "02-13", "02-14"];
+        dateOrder.forEach((dateKey) => {
+            const listItem = document.createElement("li");
+            const title = document.createElement("strong");
+            title.textContent = dateKey.replace("-", "/") + "/2026";
+            listItem.appendChild(title);
+            const quoteLines = messages[dateKey] || [];
+            quoteLines.forEach((q, idx) => {
+                const line = document.createElement("div");
+                line.textContent = (idx + 1) + ". " + q;
+                listItem.appendChild(line);
+            });
+            allQuotesList.appendChild(listItem);
+        });
 
         // Create background floating hearts
         function createHeart() {
