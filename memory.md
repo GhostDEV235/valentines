@@ -20,3 +20,7 @@ This file tracks code/documentation changes made in this project.
 ### 2026-03-01
 - Files: `memory.md`
 - Change: Added this ongoing change log and recorded the major redesign entry for future tracking.
+
+### 2026-03-01
+- Files: `index.html`
+- Change: Removed the Business Ideas section, kept financial guidance with a research disclaimer, and added a strict 2-entries-per-day limit using localStorage with daily state tracking and button lock when the limit is reached.

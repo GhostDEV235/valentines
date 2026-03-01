@@ -230,45 +230,8 @@
             opacity: 0.78;
         }
 
-        .ideas-wrap {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 0.7rem;
-        }
-
-        .idea-card {
-            padding: 0.9rem;
-            border-radius: 16px;
-            background: rgba(255, 255, 255, 0.86);
-            border: 1px solid rgba(255, 255, 255, 0.7);
-        }
-
-        .idea-card h3 {
-            margin: 0 0 0.25rem;
-            font-size: 0.98rem;
-        }
-
-        .idea-meta {
-            margin: 0 0 0.45rem;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--good);
-        }
-
-        .idea-card ol {
-            margin: 0;
-            padding-left: 1rem;
-        }
-
-        .idea-card li {
-            margin: 0 0 0.35rem;
-            font-size: 0.88rem;
-            line-height: 1.35;
-        }
-
         .span-4 { grid-column: span 4; }
         .span-6 { grid-column: span 6; }
-        .span-8 { grid-column: span 8; }
         .span-12 { grid-column: span 12; }
 
         @keyframes reveal {
@@ -277,7 +240,7 @@
         }
 
         @media (max-width: 900px) {
-            .span-4, .span-6, .span-8 { grid-column: span 12; }
+            .span-4, .span-6, .span-12 { grid-column: span 12; }
             .page { margin-top: 1rem; }
             .hero { padding-top: 1.35rem; }
         }
@@ -296,6 +259,7 @@
             <div class="meta-row">
                 <span class="chip" id="themeChip">Theme: </span>
                 <span class="chip" id="openChip">Open #</span>
+                <span class="chip" id="entryChip">Entries left: 0</span>
                 <span class="chip" id="dateChip"></span>
             </div>
             <div class="cta-row">
@@ -331,10 +295,6 @@
                 <p class="tip" id="businessAdvice"></p>
             </article>
 
-            <article class="panel glass span-12">
-                <h2>Business Ideas You Can Start (With Breakdown)</h2>
-                <div class="ideas-wrap" id="ideasWrap"></div>
-            </article>
         </section>
     </main>
 
@@ -342,6 +302,9 @@
         const name = "Habiba";
         const themeKey = "habibaThemeIndex";
         const openKey = "habibaPageOpenCount";
+        const dailyEntriesKey = "habibaEntriesViewedByDate";
+        const dailyBundleKey = "habibaLatestBundleByDate";
+        const limitPerDay = 2;
 
         const themes = [
             { name: "Sunrise Rose", bg1: "#f8bfa8", bg2: "#f6e7d7", ink: "#3d2230", accent: "#e56b6f", accent2: "#c44569", card: "rgba(255,255,255,0.74)" },
@@ -404,89 +367,6 @@
             "Measure weekly: leads, conversions, delivery time, and profit margin. Improve one number each week."
         ];
 
-        const businessIdeas = [
-            {
-                title: "Short-Form Content Studio",
-                startup: "Low-cost, skill-based",
-                steps: [
-                    "Choose a niche (beauty brands, gyms, food spots, creators).",
-                    "Build 3 sample videos from public footage or mock products.",
-                    "Pitch 20 local businesses with a fixed monthly package.",
-                    "Deliver consistently, collect testimonials, then raise pricing."
-                ]
-            },
-            {
-                title: "Digital Product Shop",
-                startup: "Low-cost, scalable",
-                steps: [
-                    "Pick a clear audience pain (job seekers, students, creators).",
-                    "Create one practical product (template bundle, planner, script kit).",
-                    "Sell via Gumroad/Payhip + social proof posts on social media.",
-                    "Add upsells and email follow-up to increase average order value."
-                ]
-            },
-            {
-                title: "Local Premium Gift Boxes",
-                startup: "Medium-cost, high perceived value",
-                steps: [
-                    "Define 3 box types (birthday, anniversary, corporate thank-you).",
-                    "Partner with local suppliers for bulk pricing and custom branding.",
-                    "Launch with lifestyle photos and same-day delivery option.",
-                    "Offer subscription gifting for companies and recurring clients."
-                ]
-            },
-            {
-                title: "Niche Coaching Service",
-                startup: "Low-cost, expertise-based",
-                steps: [
-                    "Choose an outcome you can teach clearly in 4-8 weeks.",
-                    "Create a simple framework and one signature program.",
-                    "Run free mini-workshops to generate leads and trust.",
-                    "Convert participants to paid coaching with clear results roadmap."
-                ]
-            },
-            {
-                title: "Home Bakery Brand",
-                startup: "Medium-cost, local demand",
-                steps: [
-                    "Start with 2-3 hero products and cost each item precisely.",
-                    "Set up pre-order model to avoid waste and manage cash flow.",
-                    "Use social media + neighborhood groups for weekly menu drops.",
-                    "Scale by adding event trays, office packages, and seasonal boxes."
-                ]
-            },
-            {
-                title: "Resume + LinkedIn Revamp Agency",
-                startup: "Low-cost, service business",
-                steps: [
-                    "Design before/after samples and a simple portfolio page.",
-                    "Target final-year students and career switchers.",
-                    "Offer tiered packages (resume only, resume + LinkedIn, full prep).",
-                    "Use referral bonuses to create a repeatable lead source."
-                ]
-            },
-            {
-                title: "Micro E-commerce Brand",
-                startup: "Medium-cost, product-led",
-                steps: [
-                    "Validate one problem-solving product with small test orders.",
-                    "Create short demo videos and run low-budget ad tests.",
-                    "Track conversion rate, CPA, and repeat purchase behavior.",
-                    "Improve packaging and customer support to boost retention."
-                ]
-            },
-            {
-                title: "Virtual Assistant Collective",
-                startup: "Low-cost, team-building opportunity",
-                steps: [
-                    "Start as solo VA offering admin + social scheduling services.",
-                    "Package fixed monthly retainers with defined deliverables.",
-                    "Recruit/train 1-2 assistants once demand exceeds capacity.",
-                    "Standardize tools and workflows for predictable quality."
-                ]
-            }
-        ];
-
         const headlineLines = [
             `${name}, you are my soft place and my strongest reason.`,
             `${name}, loving you makes every plan brighter.`,
@@ -505,15 +385,6 @@
             return arr[Math.floor(Math.random() * arr.length)];
         }
 
-        function pickMany(arr, count) {
-            const copy = [...arr];
-            for (let i = copy.length - 1; i > 0; i -= 1) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [copy[i], copy[j]] = [copy[j], copy[i]];
-            }
-            return copy.slice(0, count);
-        }
-
         function applyTheme(index) {
             const theme = themes[index % themes.length];
             const root = document.documentElement.style;
@@ -526,30 +397,75 @@
             document.getElementById("themeChip").textContent = "Theme: " + theme.name;
         }
 
-        function renderIdeas() {
-            const ideasWrap = document.getElementById("ideasWrap");
-            const selectedIdeas = pickMany(businessIdeas, 3);
-            ideasWrap.innerHTML = selectedIdeas.map((idea) => {
-                const steps = idea.steps.map((step) => `<li>${step}</li>`).join("");
-                return `
-                    <article class="idea-card">
-                        <h3>${idea.title}</h3>
-                        <p class="idea-meta">${idea.startup}</p>
-                        <ol>${steps}</ol>
-                    </article>
-                `;
-            }).join("");
+        function localDateKey() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, "0");
+            const day = String(now.getDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
         }
 
-        function renderBundle() {
-            document.getElementById("headline").textContent = pickOne(headlineLines);
-            document.getElementById("subline").textContent = pickOne(sublines);
-            document.getElementById("encouragement").textContent = pickOne(encouragements);
-            document.getElementById("loveQuote").textContent = pickOne(loveQuotes);
-            document.getElementById("poem").textContent = pickOne(poems);
-            document.getElementById("financeTip").textContent = pickOne(financeTips);
-            document.getElementById("businessAdvice").textContent = pickOne(businessAdvice);
-            renderIdeas();
+        function getDailyEntriesState() {
+            const today = localDateKey();
+            const raw = localStorage.getItem(dailyEntriesKey);
+            const data = raw ? JSON.parse(raw) : {};
+            const count = Number(data[today] || 0);
+            return { data, today, count };
+        }
+
+        function setDailyEntriesCount(data, today, count) {
+            data[today] = count;
+            localStorage.setItem(dailyEntriesKey, JSON.stringify(data));
+        }
+
+        function getSavedBundle(today) {
+            const raw = localStorage.getItem(dailyBundleKey);
+            const data = raw ? JSON.parse(raw) : {};
+            return data[today] || null;
+        }
+
+        function setSavedBundle(today, bundle) {
+            const raw = localStorage.getItem(dailyBundleKey);
+            const data = raw ? JSON.parse(raw) : {};
+            data[today] = bundle;
+            localStorage.setItem(dailyBundleKey, JSON.stringify(data));
+        }
+
+        function createBundle() {
+            return {
+                headline: pickOne(headlineLines),
+                subline: pickOne(sublines),
+                encouragement: pickOne(encouragements),
+                loveQuote: pickOne(loveQuotes),
+                poem: pickOne(poems),
+                financeTip: pickOne(financeTips),
+                businessAdvice: pickOne(businessAdvice)
+            };
+        }
+
+        function applyBundle(bundle) {
+            document.getElementById("headline").textContent = bundle.headline;
+            document.getElementById("subline").textContent = bundle.subline;
+            document.getElementById("encouragement").textContent = bundle.encouragement;
+            document.getElementById("loveQuote").textContent = bundle.loveQuote;
+            document.getElementById("poem").textContent = bundle.poem;
+            document.getElementById("financeTip").textContent = bundle.financeTip;
+            document.getElementById("businessAdvice").textContent = bundle.businessAdvice;
+        }
+
+        function refreshEntryState() {
+            const btn = document.getElementById("refreshBtn");
+            const entryChip = document.getElementById("entryChip");
+            const { count } = getDailyEntriesState();
+            const remaining = Math.max(0, limitPerDay - count);
+            entryChip.textContent = "Entries left: " + remaining;
+            if (count >= limitPerDay) {
+                btn.disabled = true;
+                btn.textContent = "Daily limit reached";
+            } else {
+                btn.disabled = false;
+                btn.textContent = count === 0 ? "Show Today's First Entry" : "Show Today's Second Entry";
+            }
         }
 
         function updateMeta(themeIndex) {
@@ -586,10 +502,33 @@
             const themeIndex = Number.isInteger(storedTheme) ? storedTheme : Math.floor(Math.random() * themes.length);
             applyTheme(themeIndex);
             updateMeta(themeIndex);
-            renderBundle();
+            const state = getDailyEntriesState();
+            const todayBundle = getSavedBundle(state.today);
+
+            if (todayBundle) {
+                applyBundle(todayBundle);
+            } else {
+                const firstBundle = createBundle();
+                applyBundle(firstBundle);
+                setSavedBundle(state.today, firstBundle);
+                setDailyEntriesCount(state.data, state.today, 1);
+            }
+
+            refreshEntryState();
             setInterval(spawnFloaty, 320);
 
-            document.getElementById("refreshBtn").addEventListener("click", renderBundle);
+            document.getElementById("refreshBtn").addEventListener("click", () => {
+                const { data, today, count } = getDailyEntriesState();
+                if (count >= limitPerDay) {
+                    refreshEntryState();
+                    return;
+                }
+                const nextBundle = createBundle();
+                applyBundle(nextBundle);
+                setSavedBundle(today, nextBundle);
+                setDailyEntriesCount(data, today, count + 1);
+                refreshEntryState();
+            });
             document.getElementById("themeBtn").addEventListener("click", () => {
                 const current = Number(localStorage.getItem(themeKey) || 0);
                 const next = (current + 1) % themes.length;
