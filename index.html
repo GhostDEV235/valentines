@@ -3,309 +3,602 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For You ❤️</title>
+    <title>For Habiba, Always</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-pink: #ee9ca7;
-            --secondary-pink: #ffdde1;
-            --text-color: #5a1a2c;
+            --bg-1: #f8bfa8;
+            --bg-2: #f6e7d7;
+            --ink: #3d2230;
+            --accent: #e56b6f;
+            --accent-2: #c44569;
+            --card: rgba(255, 255, 255, 0.72);
+            --line: rgba(255, 255, 255, 0.55);
+            --good: #255f4e;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
             margin: 0;
-            height: 100vh;
-            background: linear-gradient(135deg, var(--secondary-pink), var(--primary-pink));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: "Georgia", serif;
-            color: var(--text-color);
-            overflow: hidden; /* Prevents scrollbars from hearts */
-        }
-
-        /* Floating Hearts Background */
-        .heart-bg {
-            position: absolute;
-            top: -10%;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 20px;
-            user-select: none;
-            z-index: 0;
-            animation: fall linear infinite;
-        }
-
-        @keyframes fall {
-            to { transform: translateY(110vh) rotate(360deg); }
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
-            padding: 2.5rem;
-            border-radius: 30px;
-            max-width: 85%;
-            width: 380px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            min-height: 100vh;
+            font-family: "DM Sans", sans-serif;
+            color: var(--ink);
+            background: radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.35), transparent 45%),
+                radial-gradient(circle at 85% 20%, rgba(255, 255, 255, 0.25), transparent 42%),
+                linear-gradient(140deg, var(--bg-1), var(--bg-2));
+            overflow-x: hidden;
             position: relative;
-            z-index: 10;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            animation: float 4s ease-in-out infinite;
         }
 
-        h1 { margin-bottom: 1rem; font-size: 1.6rem; opacity: 0.8; }
-        p { font-size: 1.3rem; line-height: 1.6; font-weight: 500; }
-
-        .btn {
-            margin-top: 1.5rem;
-            padding: 0.7rem 1.4rem;
-            border: none;
+        .shape {
+            position: fixed;
             border-radius: 999px;
-            background: #ffffff;
-            color: var(--text-color);
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-            transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+            filter: blur(6px);
+            opacity: 0.32;
+            pointer-events: none;
+            z-index: 0;
+            animation: drift 10s ease-in-out infinite alternate;
         }
 
-        .btn:hover { transform: translateY(-1px); box-shadow: 0 12px 24px rgba(0,0,0,0.12); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
-        
-        .main-heart {
-            font-size: 2.5rem;
-            margin-top: 1.5rem;
-            display: inline-block;
-            animation: pulse 1.5s infinite;
+        .shape.one {
+            width: 260px;
+            height: 260px;
+            top: -90px;
+            left: -60px;
+            background: #ffe8c9;
         }
 
-        /* Fireworks (shown on 02/14) */
-        .fireworks {
-            position: absolute;
+        .shape.two {
+            width: 320px;
+            height: 320px;
+            right: -120px;
+            bottom: -100px;
+            background: #ffd8df;
+            animation-duration: 13s;
+        }
+
+        @keyframes drift {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(14px, -18px) scale(1.08); }
+        }
+
+        #floatingField {
+            position: fixed;
             inset: 0;
             pointer-events: none;
-            z-index: 2;
+            z-index: 1;
             overflow: hidden;
-            opacity: 0;
-            transition: opacity 0.4s ease;
         }
 
-        .fireworks.show { opacity: 1; }
-
-        .spark {
+        .floaty {
             position: absolute;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #ffffff;
-            animation: burst 1.6s ease-out infinite;
-            box-shadow:
-                0 0 12px rgba(255, 255, 255, 0.9),
-                0 0 24px rgba(255, 200, 220, 0.9),
-                0 0 36px rgba(255, 160, 200, 0.9);
+            font-size: 18px;
+            opacity: 0.65;
+            animation: rise linear forwards;
+            user-select: none;
         }
 
-        .spark:nth-child(1) { top: 15%; left: 20%; animation-delay: 0s; }
-        .spark:nth-child(2) { top: 25%; left: 70%; animation-delay: 0.3s; }
-        .spark:nth-child(3) { top: 55%; left: 35%; animation-delay: 0.6s; }
-        .spark:nth-child(4) { top: 65%; left: 75%; animation-delay: 0.9s; }
-        .spark:nth-child(5) { top: 40%; left: 50%; animation-delay: 1.2s; }
-
-        @keyframes burst {
-            0% { transform: scale(0.2); opacity: 0; }
-            20% { opacity: 1; }
-            70% { transform: scale(1.6); opacity: 0.6; }
-            100% { transform: scale(2.2); opacity: 0; }
+        @keyframes rise {
+            from { transform: translateY(0) scale(0.7) rotate(0deg); }
+            to { transform: translateY(-120vh) scale(1.25) rotate(25deg); opacity: 0; }
         }
 
-        .all-quotes {
-            margin-top: 1.5rem;
-            padding: 1rem 1.2rem;
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            text-align: left;
-            max-height: 220px;
-            overflow: auto;
+        .page {
+            width: min(1080px, 94vw);
+            margin: 2.2rem auto 3rem;
+            position: relative;
+            z-index: 2;
         }
 
-        .all-quotes h2 {
-            margin: 0 0 0.6rem 0;
-            font-size: 1.1rem;
-            opacity: 0.8;
+        .glass {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(40, 22, 30, 0.12);
         }
 
-        .all-quotes ul {
+        .hero {
+            padding: 2rem 1.4rem 1.6rem;
+            text-align: center;
+            animation: reveal 0.7s ease both;
+        }
+
+        .eyebrow {
             margin: 0;
-            padding-left: 1.2rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-size: 0.76rem;
+            font-weight: 700;
+            opacity: 0.72;
         }
 
-        .all-quotes li {
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
-            line-height: 1.4;
+        h1 {
+            margin: 0.45rem 0 0.5rem;
+            font-family: "Playfair Display", serif;
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            line-height: 1.1;
         }
 
-        .all-quotes li strong {
-            display: block;
-            margin-bottom: 0.1rem;
-            font-size: 0.9rem;
+        .subtitle {
+            margin: 0 auto;
+            max-width: 720px;
+            font-size: 1.05rem;
+            opacity: 0.92;
+        }
+
+        .meta-row {
+            margin-top: 1.1rem;
+            display: flex;
+            justify-content: center;
+            gap: 0.55rem;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(255, 255, 255, 0.55);
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .cta-row {
+            margin-top: 1.1rem;
+            display: flex;
+            justify-content: center;
+            gap: 0.65rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 999px;
+            padding: 0.7rem 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+        }
+
+        .btn.primary {
+            background: linear-gradient(120deg, var(--accent), var(--accent-2));
+            color: #fff;
+            box-shadow: 0 8px 18px rgba(196, 69, 105, 0.35);
+        }
+
+        .btn.soft {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--ink);
+            border: 1px solid rgba(255, 255, 255, 0.65);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .grid {
+            margin-top: 1rem;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 0.8rem;
+        }
+
+        .panel {
+            padding: 1rem;
+            animation: reveal 0.65s ease both;
+        }
+
+        .panel h2 {
+            margin: 0 0 0.6rem;
+            font-size: 1.02rem;
+            font-weight: 700;
             letter-spacing: 0.02em;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
+        .quote {
+            margin: 0;
+            font-size: 1.02rem;
+            line-height: 1.55;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        .poem {
+            margin: 0;
+            font-family: "Caveat", cursive;
+            font-size: 1.6rem;
+            line-height: 1.25;
+        }
+
+        .tip {
+            margin: 0;
+            line-height: 1.55;
+            font-size: 0.98rem;
+        }
+
+        .disclaimer {
+            margin-top: 0.6rem;
+            font-size: 0.76rem;
+            opacity: 0.78;
+        }
+
+        .ideas-wrap {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 0.7rem;
+        }
+
+        .idea-card {
+            padding: 0.9rem;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.86);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+        }
+
+        .idea-card h3 {
+            margin: 0 0 0.25rem;
+            font-size: 0.98rem;
+        }
+
+        .idea-meta {
+            margin: 0 0 0.45rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--good);
+        }
+
+        .idea-card ol {
+            margin: 0;
+            padding-left: 1rem;
+        }
+
+        .idea-card li {
+            margin: 0 0 0.35rem;
+            font-size: 0.88rem;
+            line-height: 1.35;
+        }
+
+        .span-4 { grid-column: span 4; }
+        .span-6 { grid-column: span 6; }
+        .span-8 { grid-column: span 8; }
+        .span-12 { grid-column: span 12; }
+
+        @keyframes reveal {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 900px) {
+            .span-4, .span-6, .span-8 { grid-column: span 12; }
+            .page { margin-top: 1rem; }
+            .hero { padding-top: 1.35rem; }
         }
     </style>
 </head>
 <body>
+    <div class="shape one"></div>
+    <div class="shape two"></div>
+    <div id="floatingField" aria-hidden="true"></div>
 
-    <div class="card">
-        <h1>Every Day, You — Habiba 🤍</h1>
-        <p id="message">Finding the right words...</p>
-        <button id="newQuoteBtn" class="btn" type="button">Show Today’s Quote</button>
-        <div class="main-heart">❤️</div>
-        <div class="all-quotes">
-            <h2>All Daily Quotes (02/08–02/14/2026)</h2>
-            <ul id="allQuotesList"></ul>
-        </div>
-    </div>
-    <div id="fireworks" class="fireworks" aria-hidden="true">
-        <span class="spark"></span>
-        <span class="spark"></span>
-        <span class="spark"></span>
-        <span class="spark"></span>
-        <span class="spark"></span>
-    </div>
+    <main class="page">
+        <section class="hero glass">
+            <p class="eyebrow">For My Favorite Person</p>
+            <h1 id="headline">Habiba, you are my peace and my fire.</h1>
+            <p class="subtitle" id="subline">Every time this page opens, it creates a fresh mix of love, motivation, and practical life ideas made for your heart and future.</p>
+            <div class="meta-row">
+                <span class="chip" id="themeChip">Theme: </span>
+                <span class="chip" id="openChip">Open #</span>
+                <span class="chip" id="dateChip"></span>
+            </div>
+            <div class="cta-row">
+                <button class="btn primary" id="refreshBtn" type="button">Create Another Surprise</button>
+                <button class="btn soft" id="themeBtn" type="button">Switch Visual Mood</button>
+            </div>
+        </section>
+
+        <section class="grid">
+            <article class="panel glass span-4">
+                <h2>Encouragement</h2>
+                <p class="quote" id="encouragement"></p>
+            </article>
+
+            <article class="panel glass span-4">
+                <h2>Love Quote</h2>
+                <p class="quote" id="loveQuote"></p>
+            </article>
+
+            <article class="panel glass span-4">
+                <h2>Cute Love Poem</h2>
+                <p class="poem" id="poem"></p>
+            </article>
+
+            <article class="panel glass span-6">
+                <h2>Money Wisdom</h2>
+                <p class="tip" id="financeTip"></p>
+                <p class="disclaimer">Educational only, not financial advice. Always verify with your own research.</p>
+            </article>
+
+            <article class="panel glass span-6">
+                <h2>Business Growth Advice</h2>
+                <p class="tip" id="businessAdvice"></p>
+            </article>
+
+            <article class="panel glass span-12">
+                <h2>Business Ideas You Can Start (With Breakdown)</h2>
+                <div class="ideas-wrap" id="ideasWrap"></div>
+            </article>
+        </section>
+    </main>
 
     <script>
-        const messages = {
-            "02-08": [
-                "Loving you isn’t something I schedule — it’s something I live, every single day.",
-                "If today is ordinary, then let my love make it extraordinary."
-            ],
-            "02-09": [
-                "Some people wait for a special date. I choose you on ordinary days too.",
-                "My favorite part of today is that it includes you."
-            ],
-            "02-10": [
-                "You make the quiet days warmer and the loud days softer.",
-                "Even the simplest moments feel sweet with you in them."
-            ],
-            "02-11": [
-                "My favorite routine is knowing you’re there.",
-                "If love had a habit, it would look like us."
-            ],
-            "02-12": [
-                "Love isn’t a moment. It’s the way you stay.",
-                "I love you in the tiny seconds that make up a day."
-            ],
-            "02-13": [
-                "Tomorrow is famous for love — but you’ve had my heart long before it.",
-                "We do not need a holiday to be my favorite."
-            ],
-            "02-14": [
-                "Happy Valentine’s Day, Habiba — our 1-year anniversary. One year of us, and my heart is even more yours.",
-                "A year ago you became my favorite place to be. Today, I love you deeper, softer, and forever."
-            ]
-        };
+        const name = "Habiba";
+        const themeKey = "habibaThemeIndex";
+        const openKey = "habibaPageOpenCount";
 
-        const btn = document.getElementById("newQuoteBtn");
-        const messageEl = document.getElementById("message");
-        const today = new Date();
-        const key = today.toLocaleDateString("en-US", { month: "2-digit", day: "2-digit" }).replace("/", "-");
-        const todayMessages = messages[key];
+        const themes = [
+            { name: "Sunrise Rose", bg1: "#f8bfa8", bg2: "#f6e7d7", ink: "#3d2230", accent: "#e56b6f", accent2: "#c44569", card: "rgba(255,255,255,0.74)" },
+            { name: "Peach Bloom", bg1: "#ffc6a1", bg2: "#ffe8cc", ink: "#442927", accent: "#e76f51", accent2: "#d1495b", card: "rgba(255,255,255,0.73)" },
+            { name: "Coral Sky", bg1: "#ffd1b7", bg2: "#ffdce5", ink: "#4f2635", accent: "#ff6f61", accent2: "#d45079", card: "rgba(255,255,255,0.75)" },
+            { name: "Honey Blush", bg1: "#ffe4a7", bg2: "#ffd6cc", ink: "#4a2d1b", accent: "#f28482", accent2: "#e76f51", card: "rgba(255,255,255,0.72)" },
+            { name: "Soft Champagne", bg1: "#f7d9c4", bg2: "#fef2d4", ink: "#3f2f2a", accent: "#d26466", accent2: "#b56576", card: "rgba(255,255,255,0.76)" }
+        ];
 
-        const storageKey = "quotesViewedByDay";
-        const limitPerDay = 2;
+        const encouragements = [
+            "You are not behind. You are building quietly, and that quiet work becomes powerful.",
+            "Your consistency is your superpower. Small wins done daily will outperform random bursts.",
+            "You have the kind of heart that people remember and the kind of discipline that builds a future.",
+            "When things feel heavy, remember this: one focused hour today can change tomorrow.",
+            "You do not need to be perfect to be unstoppable. Progress is enough.",
+            "You turn effort into elegance. Keep showing up; your results are catching up fast.",
+            "Your ideas deserve execution, not doubt. Start now and improve in motion.",
+            "You are allowed to dream big and move smart at the same time."
+        ];
 
-        function getTodayCount() {
-            const raw = localStorage.getItem(storageKey);
-            const data = raw ? JSON.parse(raw) : {};
-            const count = Number(data[key] || 0);
-            return { data, count };
-        }
+        const loveQuotes = [
+            "If my day has your smile in it, I already won.",
+            "Loving you is my calmest decision and my happiest one.",
+            "My favorite future is the one where we keep choosing each other.",
+            "You are the reason ordinary moments feel like beautiful scenes.",
+            "Home is not a place for me anymore. It is wherever you are.",
+            "I loved you in the beginning. I choose you deeper every day.",
+            "You are my soft place and my bold reason to keep growing.",
+            "You make life feel less like surviving and more like living."
+        ];
 
-        function setTodayCount(data, count) {
-            data[key] = count;
-            localStorage.setItem(storageKey, JSON.stringify(data));
-        }
+        const poems = [
+            "You are my sunrise, gentle and true,\nA little world of calm, wrapped in you.",
+            "In crowded rooms or midnight rain,\nYour name still sounds like home again.",
+            "If time runs fast, I do not care,\nI found forever in your stare.",
+            "Your laugh is music, bright and clear,\nMy safest dream is having you near.",
+            "No map was needed, no stars above,\nI reached my destination: your love.",
+            "One small heartbeat, two souls aligned,\nYour hand in mine is peace I find."
+        ];
 
-        function refreshButtonState() {
-            const { count } = getTodayCount();
-            if (!todayMessages) {
-                btn.disabled = true;
-                btn.textContent = "Quotes run 02/08–02/14/2026";
-                return;
+        const financeTips = [
+            "Use a 50/30/20 budget baseline: 50% needs, 30% wants, 20% saving/investing. Adjust, but track it monthly.",
+            "Build an emergency fund covering 3-6 months of essentials before taking major financial risks.",
+            "Automate savings the day income arrives. Discipline works best when it does not rely on mood.",
+            "Avoid lifestyle inflation: when income rises, increase savings rate first, then spending.",
+            "Learn one investing principle deeply: long-term diversified index investing beats emotional trading for most people.",
+            "Protect cash flow: reduce high-interest debt aggressively because guaranteed interest saved is guaranteed return.",
+            "Track net worth quarterly, not daily. Direction matters more than short-term noise.",
+            "Before buying anything expensive, wait 48 hours and ask: does this build my future or just my impulse?"
+        ];
+
+        const businessAdvice = [
+            "Start with a painful problem, not a cool product. Pain sells faster than novelty.",
+            "Talk to 10 potential customers before building. Their language should shape your offer.",
+            "Charge early. Payment is the strongest proof that your idea solves a real need.",
+            "Pick one channel and master it first: referrals, TikTok, Instagram, email, or cold outreach.",
+            "Create simple systems from day one: leads, follow-ups, delivery, and testimonials.",
+            "Document your process while working. Your notes become SOPs and eventually a scalable team playbook.",
+            "Focus on repeatable offers. One clear service sold many times beats many custom services sold once.",
+            "Measure weekly: leads, conversions, delivery time, and profit margin. Improve one number each week."
+        ];
+
+        const businessIdeas = [
+            {
+                title: "Short-Form Content Studio",
+                startup: "Low-cost, skill-based",
+                steps: [
+                    "Choose a niche (beauty brands, gyms, food spots, creators).",
+                    "Build 3 sample videos from public footage or mock products.",
+                    "Pitch 20 local businesses with a fixed monthly package.",
+                    "Deliver consistently, collect testimonials, then raise pricing."
+                ]
+            },
+            {
+                title: "Digital Product Shop",
+                startup: "Low-cost, scalable",
+                steps: [
+                    "Pick a clear audience pain (job seekers, students, creators).",
+                    "Create one practical product (template bundle, planner, script kit).",
+                    "Sell via Gumroad/Payhip + social proof posts on social media.",
+                    "Add upsells and email follow-up to increase average order value."
+                ]
+            },
+            {
+                title: "Local Premium Gift Boxes",
+                startup: "Medium-cost, high perceived value",
+                steps: [
+                    "Define 3 box types (birthday, anniversary, corporate thank-you).",
+                    "Partner with local suppliers for bulk pricing and custom branding.",
+                    "Launch with lifestyle photos and same-day delivery option.",
+                    "Offer subscription gifting for companies and recurring clients."
+                ]
+            },
+            {
+                title: "Niche Coaching Service",
+                startup: "Low-cost, expertise-based",
+                steps: [
+                    "Choose an outcome you can teach clearly in 4-8 weeks.",
+                    "Create a simple framework and one signature program.",
+                    "Run free mini-workshops to generate leads and trust.",
+                    "Convert participants to paid coaching with clear results roadmap."
+                ]
+            },
+            {
+                title: "Home Bakery Brand",
+                startup: "Medium-cost, local demand",
+                steps: [
+                    "Start with 2-3 hero products and cost each item precisely.",
+                    "Set up pre-order model to avoid waste and manage cash flow.",
+                    "Use social media + neighborhood groups for weekly menu drops.",
+                    "Scale by adding event trays, office packages, and seasonal boxes."
+                ]
+            },
+            {
+                title: "Resume + LinkedIn Revamp Agency",
+                startup: "Low-cost, service business",
+                steps: [
+                    "Design before/after samples and a simple portfolio page.",
+                    "Target final-year students and career switchers.",
+                    "Offer tiered packages (resume only, resume + LinkedIn, full prep).",
+                    "Use referral bonuses to create a repeatable lead source."
+                ]
+            },
+            {
+                title: "Micro E-commerce Brand",
+                startup: "Medium-cost, product-led",
+                steps: [
+                    "Validate one problem-solving product with small test orders.",
+                    "Create short demo videos and run low-budget ad tests.",
+                    "Track conversion rate, CPA, and repeat purchase behavior.",
+                    "Improve packaging and customer support to boost retention."
+                ]
+            },
+            {
+                title: "Virtual Assistant Collective",
+                startup: "Low-cost, team-building opportunity",
+                steps: [
+                    "Start as solo VA offering admin + social scheduling services.",
+                    "Package fixed monthly retainers with defined deliverables.",
+                    "Recruit/train 1-2 assistants once demand exceeds capacity.",
+                    "Standardize tools and workflows for predictable quality."
+                ]
             }
-            if (count >= limitPerDay) {
-                btn.disabled = true;
-                btn.textContent = "Come back tomorrow";
-            } else {
-                btn.disabled = false;
-                btn.textContent = count === 0 ? "Show Today’s Quote" : "Show Another Quote";
+        ];
+
+        const headlineLines = [
+            `${name}, you are my soft place and my strongest reason.`,
+            `${name}, loving you makes every plan brighter.`,
+            `${name}, this page is a small mirror of my big love for you.`,
+            `${name}, every version of my future has your name in it.`
+        ];
+
+        const sublines = [
+            "Fresh visuals and fresh words, every time you open this link.",
+            "A new blend of romance, motivation, and future-building ideas awaits each visit.",
+            "Love for your heart. Wisdom for your goals. A new mix every opening.",
+            "This page keeps changing, the same way my love keeps growing."
+        ];
+
+        function pickOne(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        function pickMany(arr, count) {
+            const copy = [...arr];
+            for (let i = copy.length - 1; i > 0; i -= 1) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
             }
+            return copy.slice(0, count);
         }
 
-        if (todayMessages) {
-            messageEl.textContent = "Tap the button to reveal today’s quote, Habiba.";
-        } else {
-            messageEl.textContent = "Quotes are available from 02/08 to 02/14/2026.";
+        function applyTheme(index) {
+            const theme = themes[index % themes.length];
+            const root = document.documentElement.style;
+            root.setProperty("--bg-1", theme.bg1);
+            root.setProperty("--bg-2", theme.bg2);
+            root.setProperty("--ink", theme.ink);
+            root.setProperty("--accent", theme.accent);
+            root.setProperty("--accent-2", theme.accent2);
+            root.setProperty("--card", theme.card);
+            document.getElementById("themeChip").textContent = "Theme: " + theme.name;
         }
 
-        btn.addEventListener("click", () => {
-            const { data, count } = getTodayCount();
-            if (!todayMessages || count >= limitPerDay) return;
-            const nextMessage = todayMessages[Math.min(count, todayMessages.length - 1)];
-            messageEl.textContent = nextMessage;
-            setTodayCount(data, count + 1);
-            refreshButtonState();
-        });
-
-        refreshButtonState();
-
-        // Fireworks for 02/14
-        const fireworks = document.getElementById("fireworks");
-        if (key === "02-14") {
-            fireworks.classList.add("show");
+        function renderIdeas() {
+            const ideasWrap = document.getElementById("ideasWrap");
+            const selectedIdeas = pickMany(businessIdeas, 3);
+            ideasWrap.innerHTML = selectedIdeas.map((idea) => {
+                const steps = idea.steps.map((step) => `<li>${step}</li>`).join("");
+                return `
+                    <article class="idea-card">
+                        <h3>${idea.title}</h3>
+                        <p class="idea-meta">${idea.startup}</p>
+                        <ol>${steps}</ol>
+                    </article>
+                `;
+            }).join("");
         }
 
-        // Render full list of daily quotes
-        const allQuotesList = document.getElementById("allQuotesList");
-        const dateOrder = ["02-08", "02-09", "02-10", "02-11", "02-12", "02-13", "02-14"];
-        dateOrder.forEach((dateKey) => {
-            const listItem = document.createElement("li");
-            const title = document.createElement("strong");
-            title.textContent = dateKey.replace("-", "/") + "/2026";
-            listItem.appendChild(title);
-            const quoteLines = messages[dateKey] || [];
-            quoteLines.forEach((q, idx) => {
-                const line = document.createElement("div");
-                line.textContent = (idx + 1) + ". " + q;
-                listItem.appendChild(line);
+        function renderBundle() {
+            document.getElementById("headline").textContent = pickOne(headlineLines);
+            document.getElementById("subline").textContent = pickOne(sublines);
+            document.getElementById("encouragement").textContent = pickOne(encouragements);
+            document.getElementById("loveQuote").textContent = pickOne(loveQuotes);
+            document.getElementById("poem").textContent = pickOne(poems);
+            document.getElementById("financeTip").textContent = pickOne(financeTips);
+            document.getElementById("businessAdvice").textContent = pickOne(businessAdvice);
+            renderIdeas();
+        }
+
+        function updateMeta(themeIndex) {
+            const opens = Number(localStorage.getItem(openKey) || 0) + 1;
+            localStorage.setItem(openKey, String(opens));
+            document.getElementById("openChip").textContent = "Open #" + opens;
+
+            const date = new Date().toLocaleDateString("en-US", {
+                weekday: "short",
+                year: "numeric",
+                month: "short",
+                day: "numeric"
             });
-            allQuotesList.appendChild(listItem);
-        });
-
-        // Create background floating hearts
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('heart-bg');
-            heart.innerHTML = '❤️';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = Math.random() * 3 + 3 + 's';
-            heart.style.opacity = Math.random();
-            document.body.appendChild(heart);
-
-            setTimeout(() => { heart.remove(); }, 6000);
+            document.getElementById("dateChip").textContent = date;
+            localStorage.setItem(themeKey, String(themeIndex));
         }
-        setInterval(createHeart, 400);
+
+        function spawnFloaty() {
+            const host = document.getElementById("floatingField");
+            const symbols = ["❤️", "💌", "✨", "🌸"];
+            const token = document.createElement("span");
+            token.className = "floaty";
+            token.textContent = pickOne(symbols);
+            token.style.left = Math.random() * 100 + "vw";
+            token.style.bottom = "-24px";
+            token.style.fontSize = (14 + Math.random() * 16).toFixed(0) + "px";
+            token.style.animationDuration = (5 + Math.random() * 5).toFixed(2) + "s";
+            host.appendChild(token);
+            setTimeout(() => token.remove(), 10500);
+        }
+
+        function init() {
+            const storedTheme = Number(localStorage.getItem(themeKey));
+            const themeIndex = Number.isInteger(storedTheme) ? storedTheme : Math.floor(Math.random() * themes.length);
+            applyTheme(themeIndex);
+            updateMeta(themeIndex);
+            renderBundle();
+            setInterval(spawnFloaty, 320);
+
+            document.getElementById("refreshBtn").addEventListener("click", renderBundle);
+            document.getElementById("themeBtn").addEventListener("click", () => {
+                const current = Number(localStorage.getItem(themeKey) || 0);
+                const next = (current + 1) % themes.length;
+                applyTheme(next);
+                localStorage.setItem(themeKey, String(next));
+            });
+        }
+
+        init();
     </script>
 </body>
 </html>
